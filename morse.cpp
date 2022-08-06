@@ -7,14 +7,29 @@ https://www.onlinegdb.com/online_c++_compiler
 
 *******************************************************************************/
 
-#include <iostream>
+/**
+ * morse code rules
+ * The length of a dot is 1 time unit.
+ * A dash is 3 time units.
+ * The space between symbols (dots and dashes) of the same letter is 1 time unit.
+ * The space between letters is 3 time units.
+ * The space between words is 7 time units.
+*/
 
+#include <iostream>
+#include <string>
 using namespace std;
 
 class Morse {
     private:
+        string output[360];
+        
+        int msgLength = 0;
+        
+        int unitTiming = 1000;
+        
         string decodeChar(char alpha) {
-            switch (day) {
+            switch (alpha) {
                 case 'a': return ".-";
                 case 'b': return "-...";
                 case 'c': return "-.-.";
@@ -41,15 +56,22 @@ class Morse {
                 case 'x': return "-..-";
                 case 'y': return "-.--";
                 case 'z': return "--..";
-                case " ": return "/";
+                default:  return "/";
+            }
         }
+        
     public:
-        string[] input()
+        void input(string input) {
+            for (int i = 0; i < input.length(); i++) {
+                msgLength++;
+                output[i] = decodeChar(input[i]);
+            }
+        }
 };
 
 int main()
 {
-    
-
+    Morse morse;
+    morse.input("cau andi");
     return 0;
 }
