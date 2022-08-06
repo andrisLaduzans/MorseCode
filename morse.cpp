@@ -87,7 +87,11 @@ class Morse {
             
             indicateStartEnd(blinkOn, blinkOff);
             
+            cout << "start" << endl;
+            
             for(int i = 0; i < msgLength; i++) {
+                cout << "word: " << output[i] << endl;
+                
                 for(int j = 0; j < output[i].length(); j++) {
                     char symbol = char(output[i][j]);
                     cout << "symbol: " << symbol << endl;
@@ -111,18 +115,18 @@ class Morse {
 };
 
 void blinkOn(int unitTiming) {
-    std::cout << "on " << "for: " << unitTiming / 1000 << " units" << std::endl;
+    std::cout << "on " << "for: " << unitTiming << " units" << std::endl;
     sleep(unitTiming / 1000);
 }
 
 void blinkOff(int unitTiming) {
-    std::cout << "off " << "for: " << unitTiming / 1000 << " units" << std::endl;
+    std::cout << "off " << "for: " << unitTiming << " units" << std::endl;
     sleep(unitTiming / 1000);
 }
 
 int main() {
     Morse morse;
-    morse.input = "a";
+    morse.input = "a b";
     morse.translate(&blinkOn, &blinkOff);
     return 0;
 }
