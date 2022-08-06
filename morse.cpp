@@ -18,6 +18,7 @@ https://www.onlinegdb.com/online_c++_compiler
 
 #include <iostream>
 #include <string>
+#include <unistd.h>
 using namespace std;
 
 class Morse {
@@ -60,18 +61,68 @@ class Morse {
             }
         }
         
-    public:
-        void input(string input) {
+        void decodeInput(string input) {
             for (int i = 0; i < input.length(); i++) {
                 msgLength++;
                 output[i] = decodeChar(input[i]);
             }
         }
+        
+        void indicateStartEnd(void (*blinkOn)(int), void (*blinkOff)(int)) {
+                for(int i = 0; i < 3; i++) {
+                    blinkOn(100);
+                    blinkOff(100);
+                }
+                blinkOff(unitTiming);
+        }
+        
+    public:
+        string input;
+        
+        int& getUnitTiming(){ return unitTiming; };
+        
+        void translate(void (*blinkOn)(int), void (*blinkOff)(int)) {
+            decodeInput(input);
+            cout << "start" << endl;
+            
+            indicateStartEnd(blinkOn, blinkOff);
+            
+            for(int i = 0; i < msgLength; i++) {
+                for(int j = 0; j < output[i].length(); j++) {
+                    char symbol = char(output[i][j]);
+                    cout << "symbol: " << symbol << endl;
+                    
+                    if(symbol == '.') {
+                        blinkOn(unitTiming);
+                        blinkOff(unitTiming);
+                    } else if (symbol == '-') {
+                        blinkOn(unitTiming * 3);
+                        blinkOff(unitTiming);
+                    } else if (symbol == '/') {
+                        blinkOff(unitTiming * 3);
+                    }
+                }
+                blinkOff(unitTiming * 3);
+            }
+            
+            cout << "end" << endl;
+            indicateStartEnd(blinkOn, blinkOff);
+        }
 };
 
-int main()
-{
+void blinkOn(int unitTiming) {
+    std::cout << "on " << "for: " << unitTiming / 1000 << " units" << std::endl;
+    sleep(unitTiming / 1000);
+}
+
+void blinkOff(int unitTiming) {
+    std::cout << "off " << "for: " << unitTiming / 1000 << " units" << std::endl;
+    sleep(unitTiming / 1000);
+}
+
+int main() {
     Morse morse;
-    morse.input("cau andi");
+    morse.input = "a";
+    morse.translate(&blinkOn, &blinkOff);
     return 0;
 }
